@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "352327318223",
+    "project_id": "cbt-test-5aece",
+    "storage_bucket": "cbt-test-5aece.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:352327318223:android:009bcc05429181a8b295ba",
+        "android_client_info": {
+          "package_name": "com.cbt.test.cbt_test"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmyVuP6iF_BGC6mfdeK0D3DLZPKa3OJWg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

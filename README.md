@@ -1,16 +1,39 @@
-# cbt_test
+# Flutter Assessment App - CodeBase Technology
 
-A new Flutter project.
+This Flutter application was developed as an **assessment task** for **CodeBase Technology**.  
+It is built specifically for **Android** and follows the principles of **Clean Architecture** for better scalability and maintainability.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 🧩 Tech Stack & Architecture
 
-A few resources to get you started if this is your first Flutter project:
+- **Flutter** — Cross-platform UI framework  
+- **Riverpod** — State management  
+- **Firebase Authentication** — For user login and signup  
+- **Firebase Firestore** — For storing user and task data  
+- **Shared Preferences** — For local storage of user-related data  
+- **Dartz** — For functional programming (`Either`, `Option`, etc.)  
+- **Equatable** — For value comparison in entities and state classes  
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🧱 Architecture Overview
+
+The app is structured following **Clean Architecture**, separating responsibilities into distinct layers:
+
+- **Presentation Layer** — UI widgets, providers, and notifiers  
+- **Domain Layer** — Use cases and entities  
+- **Data Layer** — Repositories, remote and local data sources  
+
+This approach ensures a **testable, scalable, and maintainable** codebase.
+
+---
+
+## 🚀 Features
+
+- Login and Signup using Firebase Authentication  
+- User data stored in Firebase Firestore  
+- Task data managed via Firestore  
+- Persistent login session using Shared Preferences  
+- Strongly typed and immutable state using Riverpod  
+- Functional error handling using Dartz
