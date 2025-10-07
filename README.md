@@ -12,7 +12,7 @@ It is built specifically for **Android** and follows the principles of **Clean A
 - **Firebase Authentication** — For user login and signup  
 - **Firebase Firestore** — For storing user and task data  
 - **Shared Preferences** — For local storage of user-related data  
-- **Dartz** — For functional programming (`Either`, `Option`, etc.)  
+- **Dartz** — For functional programming (`Either`)  
 - **Equatable** — For value comparison in entities and state classes  
 
 ---
