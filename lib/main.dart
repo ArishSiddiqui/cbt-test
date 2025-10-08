@@ -21,9 +21,6 @@ void main() async {
 
     runApp(const ProviderScope(child: MyApp()));
   } catch (e, _) {
-    // Log the error or show a fallback screen
-    debugPrint('Error during app initialization: $e');
-
     runApp(const InitializationErrorApp());
   }
 }

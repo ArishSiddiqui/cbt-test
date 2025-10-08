@@ -42,6 +42,7 @@ Future<void> init() async {
       updateTask: sl(),
       getAllTasks: sl(),
       getTaskByID: sl(),
+      logOutUser: sl(),
     ),
   );
 

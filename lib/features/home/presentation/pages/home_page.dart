@@ -17,8 +17,8 @@ class HomePage extends ConsumerStatefulWidget {
 
 class _HomePageState extends ConsumerState<HomePage> {
   @override
-  void dispose() {
-    super.dispose();
+  void deactivate() {
+    super.deactivate();
     // Disposing controllers to free up resources and prevent memory leaks
     ref.invalidate(homeProvider);
   }
@@ -32,6 +32,11 @@ class _HomePageState extends ConsumerState<HomePage> {
           IconButton(
             onPressed: () => Head.to(AppPages.taskDetail),
             icon: const Icon(Icons.add, color: AppColors.indigo),
+          ),
+          IconButton(
+            onPressed: () => ref.read(homeProvider.notifier).logOut(),
+            tooltip: "Logout",
+            icon: const Icon(Icons.logout_rounded, color: AppColors.red),
           ),
         ],
         elevation: 0.0,

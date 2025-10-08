@@ -6,6 +6,7 @@ import '../../../../core/constants/app_constants.dart';
 import '../../../../core/router/router.dart';
 import '../../../../core/util/custom_utils.dart';
 import '../../../../injection_container.dart';
+import '../../../auth/domain/usecases/log_out_user.dart';
 import '../../domain/usecases/get_all_tasks.dart';
 import '../../domain/usecases/get_task_by_id.dart';
 import '../../domain/usecases/update_task.dart';
@@ -19,13 +20,35 @@ class HomeStateNotifier extends StateNotifier<HomeState> {
   final DeleteTask deleteTask;
   final GetAllTasks getAllTasks;
   final GetTaskById getTaskByID;
+  final LogOutUser logOutUser;
   HomeStateNotifier({
     required this.addTask,
     required this.updateTask,
     required this.deleteTask,
     required this.getAllTasks,
     required this.getTaskByID,
+    required this.logOutUser,
   }) : super(const HomeState());
+
+  Future<void> logOut() async {
+    final result = await logOutUser.call(NoParams());
+    result.fold(
+      (failure) {
+        state = state.copywith(status: ApiStatus.error);
+        showCustomSnackBar(
+          message: failure.message ?? "Failed to log out user",
+        );
+      },
+      (response) {
+        state = state.copywith(status: ApiStatus.success);
+        if (response) {
+          Head.offAll(AppPages.login);
+        } else {
+          showCustomSnackBar(message: "Failed to log out user");
+        }
+      },
+    );
+  }
 
   Future<void> getAllTask() async {
     final result = await getAllTasks.call(NoParams());
