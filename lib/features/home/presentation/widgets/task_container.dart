@@ -2,7 +2,6 @@ import 'package:cbt_test/core/constants/app_colors.dart';
 import 'package:cbt_test/core/constants/app_constants.dart';
 import 'package:cbt_test/features/home/domain/entities/task.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../core/router/router.dart';
 
@@ -54,12 +53,12 @@ class _TaskContainerState extends State<TaskContainer> {
                 children: [
                   if (widget.iconPath != null) ...[
                     Container(
-                      padding: EdgeInsets.all(6.0),
+                      padding: EdgeInsets.all(8.0),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: AppColors.white,
                       ),
-                      child: SvgPicture.asset(widget.iconPath!, height: 24.0),
+                      child: Image.asset(widget.iconPath!, width: 20.0),
                     ),
                     const SizedBox(width: 16.0),
                   ],

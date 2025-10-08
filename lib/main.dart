@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/constants/app_constants.dart';
 import 'core/constants/app_themes.dart';
+import 'core/network/network.dart';
 import 'core/presentation/app/initialization_error_app.dart';
 import 'core/presentation/widgets/widgets.dart';
 import 'core/router/app_routes.dart';
@@ -27,8 +28,19 @@ void main() async {
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  initState() {
+    super.initState();
+    verifyConnection();
+  }
 
   // This widget is the root of your application.
   @override
