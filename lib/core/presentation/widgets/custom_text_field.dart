@@ -17,6 +17,7 @@ class CustomTextField extends StatefulWidget {
   final bool canEdit;
   final void Function()? onTap;
   final AutovalidateMode autovalidateMode;
+  final int? maxLength;
   const CustomTextField({
     required this.label,
     this.hint,
@@ -31,6 +32,7 @@ class CustomTextField extends StatefulWidget {
     this.canEdit = true,
     this.autovalidateMode = AutovalidateMode.disabled,
     this.onTap,
+    this.maxLength,
     super.key,
   });
 
@@ -86,6 +88,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         GestureDetector(
           onTap: widget.canEdit ? null : widget.onTap,
           child: TextFormField(
+            maxLength: widget.maxLength,
             autovalidateMode: widget.autovalidateMode,
             readOnly: !widget.canEdit,
             onTap: widget.onTap,

@@ -21,7 +21,7 @@ class SplashStateNotifier extends StateNotifier<void> {
       },
       (response) {
         if (response) {
-          return Head.offAll(AppPages.login);
+          return Head.offAll(AppPages.home);
         } else {
           return Head.offAll(AppPages.login);
         }

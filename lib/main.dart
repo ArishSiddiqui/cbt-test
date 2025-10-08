@@ -1,9 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
-// import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/constants/app_constants.dart';
 import 'core/constants/app_themes.dart';
+import 'core/presentation/app/initialization_error_app.dart';
 import 'core/presentation/widgets/widgets.dart';
 import 'core/router/app_routes.dart';
 import 'injection_container.dart' as di;
@@ -14,11 +14,17 @@ void main() async {
   };
 
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    // options: DefaultFire.currentPlatform,
-  );
-  await di.init();
-  runApp(const ProviderScope(child: MyApp()));
+  try {
+    await Firebase.initializeApp();
+    await di.init();
+
+    runApp(const ProviderScope(child: MyApp()));
+  } catch (e, _) {
+    // Log the error or show a fallback screen
+    debugPrint('Error during app initialization: $e');
+
+    runApp(const InitializationErrorApp());
+  }
 }
 
 class MyApp extends StatelessWidget {

@@ -44,4 +44,31 @@ class InputValidators {
     }
     return null;
   }
+
+  static String? validateTitle(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Please enter a title';
+    }
+    if (value.trim().length < 3) {
+      return 'Title must be at least 3 characters';
+    }
+    return null;
+  }
+
+  static String? validateDescription(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Please enter a description';
+    }
+    if (value.trim().length < 10) {
+      return 'Description must be at least 10 characters';
+    }
+    return null;
+  }
+
+  static String? validateStatus(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please select a status';
+    }
+    return null;
+  }
 }

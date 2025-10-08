@@ -10,6 +10,15 @@ import 'features/auth/data/datasources/auth_remote_data_source.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
 import 'features/auth/domain/repositories/auth_repository.dart';
 import 'features/auth/presentation/provider/auth_provider.dart';
+import 'features/home/data/datasources/home_remote_data_source.dart';
+import 'features/home/data/repositories/home_repository_impl.dart';
+import 'features/home/domain/repositories/home_repository.dart';
+import 'features/home/domain/usecases/add_task.dart';
+import 'features/home/domain/usecases/delete_task.dart';
+import 'features/home/domain/usecases/get_all_tasks.dart';
+import 'features/home/domain/usecases/get_task_by_id.dart';
+import 'features/home/domain/usecases/update_task.dart';
+import 'features/home/presentation/provider/home_provider.dart';
 import 'features/splash/data/datasources/splash_local_data_source.dart';
 import 'features/splash/data/repositories/splash_repository_impl.dart';
 import 'features/splash/domain/repositories/splash_repository.dart';
@@ -26,15 +35,26 @@ Future<void> init() async {
     () =>
         AuthStateNotifier(logOutUser: sl(), loginUser: sl(), signUpUser: sl()),
   );
+  sl.registerFactory(
+    () => HomeStateNotifier(
+      deleteTask: sl(),
+      addTask: sl(),
+      updateTask: sl(),
+      getAllTasks: sl(),
+      getTaskByID: sl(),
+    ),
+  );
 
   //# Use Cases
   sl.registerLazySingleton(() => GetUserLoggedInStatus(sl()));
   sl.registerLazySingleton(() => LogOutUser(sl()));
   sl.registerLazySingleton(() => LogInUser(sl()));
   sl.registerLazySingleton(() => SignUpUser(sl()));
-  // sl.registerLazySingleton(
-  //   () => GetRandomNumberTrivai(sl()),
-  // );
+  sl.registerLazySingleton(() => AddTask(sl()));
+  sl.registerLazySingleton(() => UpdateTask(sl()));
+  sl.registerLazySingleton(() => DeleteTask(sl()));
+  sl.registerLazySingleton(() => GetAllTasks(sl()));
+  sl.registerLazySingleton(() => GetTaskById(sl()));
 
   //# Repository
   sl.registerLazySingleton<SplashRepository>(
@@ -42,6 +62,9 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(remoteDataSource: sl()),
+  );
+  sl.registerLazySingleton<HomeRepository>(
+    () => HomeRepositoryImpl(remoteDataSource: sl()),
   );
 
   //# Data sources
@@ -56,11 +79,9 @@ Future<void> init() async {
       firestore: sl(),
     ),
   );
-  // sl.registerLazySingleton<NumberTriviaRemoteDataSource>(
-  //   () => NumberTriviaRemoteDataSourceImpl(
-  //     client: sl(),
-  //   ),
-  // );
+  sl.registerLazySingleton<HomeRemoteDataSource>(
+    () => HomeRemoteDataSourceImpl(firestore: sl()),
+  );
 
   //! Core
 

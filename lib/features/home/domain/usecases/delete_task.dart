@@ -1,24 +1,27 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../../core/error/failure.dart';
 import '../../../../core/usecases/usecase.dart';
-import '../repositories/auth_repository.dart';
+import '../repositories/home_repository.dart';
 
-class SignUpUser implements Usecase<UserCredential, SignUpUserParams> {
-  final AuthRepository repository;
-  SignUpUser(this.repository);
+class DeleteTask implements Usecase<void, DeleteTaskParams> {
+  final HomeRepository repository;
+  DeleteTask(this.repository);
 
   @override
-  Future<Either<Failure, UserCredential>> call(SignUpUserParams params) async {
-    return await repository.signUp(
-      email: params.email,
-      firstName: params.firstName,
-      lastName: params.lastName,
-      password: params.password,
-    );
+  Future<Either<Failure, void>> call(DeleteTaskParams params) async {
+    return await repository.deleteTask(params.taskId);
   }
+}
+
+class DeleteTaskParams extends Equatable {
+  final String taskId;
+
+  const DeleteTaskParams({required this.taskId});
+
+  @override
+  List<Object?> get props => [taskId];
 }
 
 class SignUpUserParams extends Equatable {

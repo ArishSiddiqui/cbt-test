@@ -1,3 +1,4 @@
+import 'package:cbt_test/features/home/domain/entities/task.dart';
 import 'package:flutter/material.dart';
 
 import '../../features/auth/presentation/pages/login_page.dart';
@@ -26,8 +27,8 @@ class AppRoutes {
       AppPages.taskDetail => MaterialPageRoute(
         settings: settings,
         builder: (BuildContext context) {
-          // final data = settings.arguments as VerifyOtpPageData;
-          return TaskDetailPage();
+          final task = settings.arguments as TaskEntity?;
+          return TaskDetailPage(task: task);
         },
       ),
       AppPages.home => MaterialPageRoute(

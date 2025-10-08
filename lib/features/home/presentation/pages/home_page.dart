@@ -1,13 +1,12 @@
-import 'package:cbt_test/core/constants/app_constants.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/presentation/widgets/widgets.dart';
 import '../../../../core/router/router.dart';
-import '../../../../core/util/custom_utils.dart';
-import '../provider/auth_provider.dart';
+import '../provider/home_provider.dart';
+import '../widgets/widgets.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -17,114 +16,106 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
-  final GlobalKey<FormState> loginKey = GlobalKey<FormState>();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-
   @override
   void dispose() {
     super.dispose();
     // Disposing controllers to free up resources and prevent memory leaks
-    emailController.dispose();
-    passwordController.dispose();
+    ref.invalidate(homeProvider);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: buildBody());
-  }
-
-  Widget buildBody() {
-    return SingleChildScrollView(
-      child: Container(
-        constraints: BoxConstraints(minHeight: pendingScreenHeight!),
-        // height: pendingScreenHeight,
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: loginKey,
-          child: Consumer(
-            builder: (context, ref, _) {
-              final notifier = ref.read(authProvider.notifier);
-              final state = ref.watch(authProvider);
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  LogoWidget(size: screenHeight! * 0.1),
-                  const SizedBox(height: 48.0),
-                  const Text(
-                    'Welocme back',
-                    style: TextStyle(
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.black,
-                    ),
-                  ),
-                  const SizedBox(height: 12.0),
-                  const Text(
-                    'Welocme back! Please enter your details.',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: AppColors.deepBlack,
-                    ),
-                  ),
-                  const SizedBox(height: 48.0),
-                  CustomTextField(
-                    controller: emailController,
-                    label: 'Email address',
-                    hint: "Enter your email address",
-                    validator: InputValidators.validateEmail,
-                  ),
-                  const SizedBox(height: 16.0),
-                  CustomTextField(
-                    controller: passwordController,
-                    isPasswordField: true,
-                    label: 'Password',
-                    validator: InputValidators.validatePassword,
-                  ),
-                  const SizedBox(height: 32.0),
-                  CustomButton(
-                    disable: state.status == ApiStatus.loading,
-                    name: 'Log in',
-                    onTap: () {
-                      if (loginKey.currentState!.validate()) {
-                        notifier.logIn(
-                          email: emailController.text,
-                          password: passwordController.text,
-                        );
-                      }
-                      return;
-                    },
-                  ),
-                  const SizedBox(height: 32.0),
-                  RichText(
-                    text: TextSpan(
-                      style: const TextStyle(
-                        color: AppColors.deepBlack,
-                        fontSize: 15.0,
-                      ),
-                      children: [
-                        const TextSpan(text: 'Don\'t have an account? '),
-                        TextSpan(
-                          text: 'Sign up',
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              Head.to(AppPages.signUp);
-                            },
-                          style: const TextStyle(
-                            color: AppColors.violet,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              );
-            },
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.white,
+        actions: [
+          IconButton(
+            onPressed: () => Head.to(AppPages.taskDetail),
+            icon: const Icon(Icons.add, color: AppColors.indigo),
+          ),
+        ],
+        elevation: 0.0,
+        title: Text(
+          "CB Kanban",
+          style: TextStyle(
+            fontWeight: FontWeight.w700,
+            color: AppColors.black,
+            fontSize: 15.0,
           ),
         ),
       ),
+      body: buildBody(),
+    );
+  }
+
+  Widget buildBody() {
+    return Consumer(
+      builder: (context, ref, _) {
+        final notifier = ref.read(homeProvider.notifier);
+        final state = ref.watch(homeProvider);
+        final getTasks = ref.watch(getAllTasksProvider);
+        return getTasks.when(
+          data: (_) => RefreshIndicator(
+            onRefresh: notifier.getAllTask,
+            child:
+                state.done.isEmpty &&
+                    state.inProgress.isEmpty &&
+                    state.todo.isEmpty
+                ? NoTask()
+                : ListView(
+                    children: [
+                      if (state.todo.isNotEmpty) ...[
+                        TaskContainer(
+                          section: "To Do",
+                          iconPath: AppIcons.todo,
+                          tasks: state.todo,
+                          onTaskDropped: (task, status) => notifier.editTask(
+                            taskID: task.id,
+                            description: task.description,
+                            status: status,
+                            title: task.title,
+                            ref: ref,
+                          ),
+                        ),
+                      ],
+                      if (state.inProgress.isNotEmpty) ...[
+                        TaskContainer(
+                          section: "In Progress",
+                          iconPath: AppIcons.inProgress,
+                          tasks: state.inProgress,
+                          onTaskDropped: (task, status) => notifier.editTask(
+                            taskID: task.id,
+                            description: task.description,
+                            status: status,
+                            title: task.title,
+                            ref: ref,
+                          ),
+                        ),
+                      ],
+                      if (state.done.isNotEmpty) ...[
+                        TaskContainer(
+                          section: "Done",
+                          iconPath: AppIcons.done,
+                          isDone: true,
+                          tasks: state.done,
+                          onTaskDropped: (task, status) => notifier.editTask(
+                            taskID: task.id,
+                            description: task.description,
+                            status: status,
+                            title: task.title,
+                            ref: ref,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+          ),
+          error: (error, stackTrace) => const Center(
+            child: Text('Error', style: TextStyle(color: AppColors.deepBlack)),
+          ),
+          loading: () => const CustomLoader(),
+        );
+      },
     );
   }
 }
