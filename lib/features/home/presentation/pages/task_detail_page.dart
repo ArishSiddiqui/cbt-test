@@ -23,7 +23,7 @@ class _TaskDetailPageState extends State<TaskDetailPage> {
   final TextEditingController descriptionController = TextEditingController();
   final ValueNotifier<String?> statusNotifier = ValueNotifier<String?>(null);
 
-  final List<String> statuses = ["To Do", "In Progress", "Done"];
+  final List<String> statuses = ["To Do", "In Progress", "Completed"];
 
   @override
   void initState() {

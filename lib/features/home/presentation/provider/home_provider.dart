@@ -41,7 +41,7 @@ class HomeStateNotifier extends StateNotifier<HomeState> {
         List<TaskEntity> inProgress = <TaskEntity>[];
         List<TaskEntity> todo = <TaskEntity>[];
         if (response.isNotEmpty) {
-          done = response.where((t) => t.status == "Done").toList();
+          done = response.where((t) => t.status == "Completed").toList();
           todo = response.where((t) => t.status == "To Do").toList();
           inProgress = response
               .where((t) => t.status == "In Progress")

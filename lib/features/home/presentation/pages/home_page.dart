@@ -94,7 +94,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       ],
                       if (state.done.isNotEmpty) ...[
                         TaskContainer(
-                          section: "Done",
+                          section: "Completed",
                           iconPath: AppIcons.done,
                           isDone: true,
                           tasks: state.done,
