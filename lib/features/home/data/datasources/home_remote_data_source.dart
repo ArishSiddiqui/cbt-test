@@ -34,13 +34,20 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
     required String description,
     required String status,
   }) async {
-    await _tasksRef.add({
-      'title': title,
-      'description': description,
-      'status': status,
-      'createdBy': userUID,
-      'createdAt': FieldValue.serverTimestamp(),
-    });
+    await _tasksRef
+        .add({
+          'title': title,
+          'description': description,
+          'status': status,
+          'createdBy': userUID,
+          'createdAt': FieldValue.serverTimestamp(),
+        })
+        .timeout(
+          timeoutDuration,
+          onTimeout: () {
+            throw ServerException('Adding task timed out. Please try again.');
+          },
+        );
   }
 
   /// Read all tasks
@@ -48,7 +55,15 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   Future<List<TaskModel>> getAllTasks() async {
     final querySnapshot = await _tasksRef
         .orderBy('createdAt', descending: true)
-        .get();
+        .get()
+        .timeout(
+          timeoutDuration,
+          onTimeout: () {
+            throw ServerException(
+              'Fetching all tasks timed out. Please try again.',
+            );
+          },
+        );
     return querySnapshot.docs.map((doc) {
       final data = doc.data() as Map<String, dynamic>;
       data['id'] = doc.id; // include document ID
@@ -70,19 +85,43 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
       if (status != null) 'status': status,
       'updatedAt': FieldValue.serverTimestamp(),
     };
-    await _tasksRef.doc(taskId).update(updateData);
+    await _tasksRef
+        .doc(taskId)
+        .update(updateData)
+        .timeout(
+          timeoutDuration,
+          onTimeout: () {
+            throw ServerException('Upadting task timed out. Please try again.');
+          },
+        );
   }
 
   /// Delete a task
   @override
   Future<void> deleteTask(String taskId) async {
-    await _tasksRef.doc(taskId).delete();
+    await _tasksRef
+        .doc(taskId)
+        .delete()
+        .timeout(
+          timeoutDuration,
+          onTimeout: () {
+            throw ServerException('Deleting task timed out. Please try again.');
+          },
+        );
   }
 
   /// Read a single task by ID
   @override
   Future<TaskModel> getTaskById(String taskId) async {
-    final doc = await _tasksRef.doc(taskId).get();
+    final doc = await _tasksRef
+        .doc(taskId)
+        .get()
+        .timeout(
+          timeoutDuration,
+          onTimeout: () {
+            throw ServerException('Fetching task timed out. Please try again.');
+          },
+        );
     if (doc.exists) {
       final data = doc.data() as Map<String, dynamic>;
       data['id'] = doc.id;
